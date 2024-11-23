@@ -6,13 +6,17 @@ const authenticateToken = require('../middlewares/auth');
 // Get pair scores
 router.get("/pair", authenticateToken, async (req, res) => {
     try {
+        // Obtén el ID del usuario autenticado desde el token
+        const userId = req.user.id;
+
+        // Busca los puntajes y asocia el nombre de usuario desde la referencia
         const scores = await Pair.find().populate("user_id", "username");
-        const formattedScores = scores.map(score => ({
-            username: score.user_id.username,
-            time: score.time,
-            count: score.count
-        }));
-        res.status(200).json(formattedScores);
+
+        // Devuelve los puntajes y el ID del usuario autenticado
+        res.status(200).json({
+            scores,
+            loggedInUserId: userId, // ID del usuario autenticado
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Error al obtener los puntajes" });
