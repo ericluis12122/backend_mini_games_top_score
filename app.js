@@ -6,6 +6,7 @@ const authUserRoutes = require("./routes/user_auth");
 const pairScoreRoutes = require("./routes/pair_score");
 
 dotenv.config();
+console.log("Environment variables loaded:", process.env);
 connectDB();
 
 const app = express();
