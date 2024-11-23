@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { CancellationToken, LEGAL_TLS_SOCKET_OPTIONS } = require("mongodb");
 const router = express.Router();
 
 // Sign Up
@@ -15,7 +16,8 @@ router.post("/signup", async (req, res) => {
     const user = new User({ username, email, password: hashedPassword });
     await user.save();
     console.log(username, email, password, '...registered');
-    res.status(201).json({ message: "User registered" });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    res.status(201).json({ token });
   } catch (err) {
     res.status(500).json({ error: "Error registering user" });
     console.log(err.message);
@@ -35,7 +37,7 @@ router.post("/login", async (req, res) => {
     console.log(email, password, '...login');
     
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-    res.json({ token });
+    res.status(201).json({ token });
   } catch (err) {
     res.status(500).json({ error: "Error logging in" });
   }
