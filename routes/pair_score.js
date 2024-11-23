@@ -4,7 +4,7 @@ const router = express.Router();
 const authenticateToken = require('../middlewares/auth');
 
 // Get pair scores
-router.get("/pair", async (req, res) => {
+router.get("/pair", authenticateToken, async (req, res) => {
     try {
         const scores = await Pair.find().populate("user_id", "username");
         const formattedScores = scores.map(score => ({
@@ -32,15 +32,20 @@ router.post("/pair", authenticateToken, async (req, res) => {
             console.log("old {time, count}: no registro previo");
             score = new Pair({user_id, time, count});
             await score.save();
+            res.status(201).json({ message: "Good job!" });
         }
         else if (time < score.time || count < score.count) {
             console.log("old {time, count}:", score.time, score.count);
             score.time = Math.min(time, score.time); // Tomar el menor valor de `time`
             score.count = Math.min(count, score.count); // Tomar el menor valor de `count`
             await score.save();
+            res.status(201).json({ message: "new personal score" });
+        }
+        else {
+            res.status(201).json({ message: "Good try!" });
         }
         console.log("current {time, count}:", score.time, score.count);
-        res.status(201).json({ message: "Pair score registered" });
+        
     } catch (error) {
         res.status(500).json({ error: "Error registering pair score" });
         console.log(err.message);
