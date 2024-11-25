@@ -1,0 +1,8 @@
+POST http://localhost:8080/mine HTTP/1.1 
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDE3MDQ2YzcyNzIwY2M4YmVkYmNlYiIsImlhdCI6MTczMjU2NDI0OCwiZXhwIjoxNzMyNTY3ODQ4fQ.HFtcGooaZ03OK4klRpCocC5cQYGW6_0SY5ZZe7nUp9Q
+
+{
+    "time": 2000, 
+    "count": 200
+}
